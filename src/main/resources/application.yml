@@ -1,2 +1,4 @@
+# /.well-known/openid-configuration
+# /.well-known/oauth-authorization-server
 server:
   port: 9000
