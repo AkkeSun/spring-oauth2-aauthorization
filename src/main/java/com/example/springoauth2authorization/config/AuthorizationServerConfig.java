@@ -1,5 +1,9 @@
 package com.example.springoauth2authorization.config;
 
+import com.example.springoauth2authorization.handler.CustomAuthenticationFailureHandler;
+import com.example.springoauth2authorization.handler.CustomAuthenticationSuccessHandler;
+import com.example.springoauth2authorization.provider.CustomAuthenticationProvider;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,7 +17,12 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
     인가서버 설정
  */
 @Configuration
+@RequiredArgsConstructor
 public class AuthorizationServerConfig {
+
+    private final CustomAuthenticationProvider authenticationProvider;
+    private final CustomAuthenticationSuccessHandler authenticationSuccessHandler;
+    private final CustomAuthenticationFailureHandler authenticationFailureHandler;
 
     @Bean
     public SecurityFilterChain authSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -21,6 +30,13 @@ public class AuthorizationServerConfig {
             new OAuth2AuthorizationServerConfigurer<>();
         RequestMatcher endpointMather = auth2AuthorizationServerConfigurer
             .getEndpointsMatcher();
+
+        auth2AuthorizationServerConfigurer.authorizationEndpoint(
+            endpoint -> endpoint
+                .authorizationResponseHandler(authenticationSuccessHandler)
+                .errorResponseHandler(authenticationFailureHandler)
+                .authenticationProvider(authenticationProvider)
+        );
 
         http
             .requestMatcher(endpointMather)
