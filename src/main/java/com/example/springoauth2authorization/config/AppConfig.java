@@ -82,9 +82,9 @@ public class AppConfig {
             .scope(scope1)
             .scope(scope2)
             // 사용자 동의 과정 사용 유무
-            .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
+            .clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
             // 토큰설정
-            .tokenSettings(TokenSettings.builder().accessTokenTimeToLive(Duration.ofSeconds(1L)).build())
+            .tokenSettings(TokenSettings.builder().accessTokenTimeToLive(Duration.ofMinutes(11)).build())
             .build();
     }
 
