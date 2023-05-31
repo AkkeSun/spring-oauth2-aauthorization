@@ -18,8 +18,10 @@ public class DefaultSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeRequests().anyRequest().authenticated();
+        http.httpBasic().disable();
+        http.csrf().disable();
 
+        http.authorizeRequests().anyRequest().authenticated();
         // AuthenticationProvider 커스텀 클래스 사용시 필요한 설정
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setUserDetailsService(userDetailsService());
@@ -36,5 +38,4 @@ public class DefaultSecurityConfig {
         UserDetails userDetails = User.withUsername("user").password("{noop}1234").authorities("ROLE_USER").build();
         return new InMemoryUserDetailsManager(userDetails);
     }
-
 }
